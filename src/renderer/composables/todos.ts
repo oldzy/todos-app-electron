@@ -8,8 +8,14 @@ export function useTodos() {
         todos.value = await window.electronService.todos.getTodos();
     };
 
+    const addTodo = async (todo: Todo) => {
+        await window.electronService.todos.addTodo(todo);
+        await fetchTodos();
+    }
+
     return  {
         todos,
+        addTodo,
         fetchTodos
     }
 }

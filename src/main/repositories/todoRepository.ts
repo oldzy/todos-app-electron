@@ -29,4 +29,8 @@ export class TodoRepository {
     getTodos(): Todo[] {
         return this.todos;
     }
+
+    addTodo(todo: Todo): void {
+        this.todos.push(todo);
+    }
 }
