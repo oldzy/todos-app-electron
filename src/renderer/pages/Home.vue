@@ -1,5 +1,7 @@
 <template>
-  <Card v-for="value in todos" :todo="value"/>
+  <div class="list-container">
+    <Card v-for="value in todos" :todo="value"/>
+  </div>
   <AddTodoButton/>
 </template>
 
@@ -15,3 +17,16 @@ onMounted(async () => {
   fetchTodos();
 });
 </script>
+
+<style scoped>
+
+.list-container {
+  display: flex;
+  flex-direction: column;
+  margin: 0 auto;
+  gap: 1rem;
+  padding: 1rem;
+  max-width: 75%;
+}
+
+</style>

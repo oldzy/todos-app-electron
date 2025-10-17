@@ -2,24 +2,28 @@ import Todo from "src/shared/todo";
 
 export class TodoRepository {
     todos: Todo[] = [{
+        id: 1,
         title: 'MaTache1',
         description: 'untruca faire',
         dateLimite: new Date(),
         isFinished: false
     },
     {
+        id: 2,
         title: 'Etudier SGBD',
         description: 'blabla',
         dateLimite: new Date(),
         isFinished: false
     },
     {
+        id: 3,
         title: 'Etudier Reseau',
         description: 'blabla',
         dateLimite: new Date(),
         isFinished: false
     },
     {
+        id: 4,
         title: 'Etudier Anglais',
         description: 'blabla',
         dateLimite: new Date(),
@@ -31,6 +35,8 @@ export class TodoRepository {
     }
 
     addTodo(todo: Todo): void {
+        let id = Math.max(...this.todos.map(t => t.id)) + 1;
+        todo.id = id;
         this.todos.push(todo);
     }
 }

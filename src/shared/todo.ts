@@ -1,6 +1,7 @@
 export default interface Todo {
-        title: string;
-        description: string;
-        dateLimite: Date;
-        isFinished: boolean;
+    id?: number;
+    title: string;
+    description: string;
+    dateLimite: Date;
+    isFinished: boolean;
 }
