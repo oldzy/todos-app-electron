@@ -1,42 +1,64 @@
 import Todo from "src/shared/todo";
+import { PrismaMariaDb } from "@prisma/adapter-mariadb";
+import { PrismaClient } from "./prisma/generated/client";
 
 export class TodoRepository {
-    todos: Todo[] = [{
-        id: 1,
-        title: 'MaTache1',
-        description: 'untruca faire',
-        dateLimite: new Date(),
-        isFinished: false
-    },
-    {
-        id: 2,
-        title: 'Etudier SGBD',
-        description: 'blabla',
-        dateLimite: new Date(),
-        isFinished: false
-    },
-    {
-        id: 3,
-        title: 'Etudier Reseau',
-        description: 'blabla',
-        dateLimite: new Date(),
-        isFinished: false
-    },
-    {
-        id: 4,
-        title: 'Etudier Anglais',
-        description: 'blabla',
-        dateLimite: new Date(),
-        isFinished: false
-    }]
+  private dbclient: PrismaClient;
+  constructor() {
+    let adapter = new PrismaMariaDb(process.env.DATABASE_URL);
+    this.dbclient = new PrismaClient({ adapter });
+  }
 
-    getTodos(): Todo[] {
-        return this.todos;
-    }
+  async getTodos(): Promise<Todo[]> {
+    let todos = await this.dbclient.todos.findMany();
 
-    addTodo(todo: Todo): void {
-        let id = Math.max(...this.todos.map(t => t.id)) + 1;
-        todo.id = id;
-        this.todos.push(todo);
-    }
+    return todos.map((t) => {
+      return {
+        id: t.id,
+        title: t.title,
+        description: t.description,
+        dateLimite: t.due_date,
+        isFinished: t.is_finished,
+      } as Todo;
+    });
+  }
+
+  async addTodo(todo: Todo): Promise<void> {
+    await this.dbclient.todos.create({
+      data: {
+        id: 0,
+        title: todo.title,
+        description: todo.description,
+        due_date: todo.dateLimite,
+        is_finished: todo.isFinished,
+      },
+    });
+  }
+
+  async deleteTodo(id: number): Promise<void> {
+    await this.dbclient.todos.delete({
+      where: {
+        id: id,
+      },
+    });
+  }
+
+  async toggleTodo(id: number): Promise<void> {
+    let todo = await this.dbclient.todos.findUnique({
+      where: {
+        id: id,
+      },
+    });
+
+    await this.dbclient.todos.update({
+      where: {
+        id: id,
+      },
+      data: {
+        is_finished: {
+          set: !todo.is_finished,
+        },
+      },
+    });
+  }
 }

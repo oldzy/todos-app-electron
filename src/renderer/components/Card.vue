@@ -1,22 +1,30 @@
 <template>
     <div class="card">
-        <input class="checkbox" type="checkbox"/>
+        <input class="checkbox" type="checkbox" :checked="props.todo.isFinished" @click="toggleTodo(props.todo.id)"/>
         <div class="card-info">
-            <span class="title">{{ props.todo.title }}</span>
+            <span class="title" :class="{ done: props.todo.isFinished }">{{ props.todo.title }}</span>
             <span class="description">{{ props.todo.description }}</span>
         </div>
-        <button class="delete-button">Delete</button>
+        <button class="delete-button" @click="handleDelete">Delete</button>
     </div>
 </template>
 
 <script lang="ts" setup>
 import Todo from 'src/shared/todo';
+import { useTodos } from '../composables/todos';
 
 interface Props {
     todo: Todo
 }
 
 const props = defineProps<Props>();
+const { deleteTodo, toggleTodo } = useTodos();
+
+const handleDelete = async () => {
+    if (confirm("Are you sure you want to delete this todo?")) {
+        await deleteTodo(props.todo.id);
+    }
+};
 </script>
 
 <style>
