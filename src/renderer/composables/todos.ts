@@ -13,9 +13,21 @@ export function useTodos() {
         await fetchTodos();
     }
 
+    const deleteTodo = async (id: number) => {
+        await window.electronService.todos.deleteTodo(id);
+        await fetchTodos();
+    };
+
+    const toggleTodo = async (id: number) => {
+        await window.electronService.todos.toggleTodo(id);
+        await fetchTodos();
+    };
+
     return  {
         todos,
         addTodo,
-        fetchTodos
+        fetchTodos,
+        deleteTodo,
+        toggleTodo
     }
 }

@@ -39,4 +39,15 @@ export class TodoRepository {
         todo.id = id;
         this.todos.push(todo);
     }
+
+    deleteTodo(id: number): void {
+        this.todos = this.todos.filter(t => t.id !== id);
+    }
+
+    toggleTodo(id: number): void {
+        let todo = this.todos.find(t => t.id === id);
+        if (todo) {
+            todo.isFinished = !todo.isFinished;
+        }
+    }
 }
