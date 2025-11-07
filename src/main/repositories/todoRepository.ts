@@ -10,7 +10,15 @@ export class TodoRepository {
   }
 
   async getTodos(): Promise<Todo[]> {
-    let todos = await this.dbclient.todos.findMany();
+    let todos = await this.dbclient.todos.findMany({
+      include: {
+        todo_tags: {
+          include: {
+            tags: true,
+          },
+        }
+      }
+    });
 
     return todos.map((t) => {
       return {
@@ -19,6 +27,7 @@ export class TodoRepository {
         description: t.description,
         dateLimite: t.due_date,
         isFinished: t.is_finished,
+        tags: t.todo_tags.map((tt) => tt.tags.name),
       } as Todo;
     });
   }

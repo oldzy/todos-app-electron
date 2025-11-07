@@ -1,17 +1,25 @@
 <template>
     <div class="card">
-        <input class="checkbox" type="checkbox" :checked="props.todo.isFinished" @click="toggleTodo(props.todo.id)"/>
-        <div class="card-info">
-            <span class="title" :class="{ done: props.todo.isFinished }">{{ props.todo.title }}</span>
-            <span class="description">{{ props.todo.description }}</span>
+        <div>
+            <input class="checkbox" type="checkbox" :checked="props.todo.isFinished"
+                @click="toggleTodo(props.todo.id)" />
+            <div class="card-info">
+                <span class="title" :class="{ done: props.todo.isFinished }">{{ props.todo.title }}</span>
+                <span class="description">{{ props.todo.description }}</span>
+            </div>
+            <button class="delete-button" @click="handleDelete">Delete</button>
         </div>
-        <button class="delete-button" @click="handleDelete">Delete</button>
+
+        <div class="tags">
+            <Tag v-for="tag in props.todo.tags" :key="tag" :name="tag" />
+        </div>
     </div>
 </template>
 
 <script lang="ts" setup>
 import Todo from 'src/shared/todo';
 import { useTodos } from '../composables/todos';
+import Tag from './Tag.vue';
 
 interface Props {
     todo: Todo
@@ -30,12 +38,28 @@ const handleDelete = async () => {
 <style>
 .card {
     display: flex;
+    flex-direction: column;
     padding: 2rem;
     box-shadow: 10px 10px 30px rgba(0, 0, 0, .2);
     background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
     border: 1px solid #e2e8f0;
     border-radius: .5rem;
     transition: ease-in-out .2s;
+}
+
+.card > div:first-child {
+    display: flex;
+    align-items: center;
+    gap: 1.5rem;
+    flex-grow: 1;
+}
+
+.card > .tags {
+    margin-top: 1rem;
+    margin-left: 4rem;
+    display: flex;
+    flex-wrap: wrap;
+    gap: .5rem;
 }
 
 .card-info {

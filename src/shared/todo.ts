@@ -4,4 +4,5 @@ export default interface Todo {
     description: string;
     dateLimite: Date;
     isFinished: boolean;
+    tags?: string[];
 }
